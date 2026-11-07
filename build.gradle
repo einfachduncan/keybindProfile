@@ -1,0 +1,28 @@
+buildscript {
+    repositories { maven { url = 'https://maven.fabricmc.net/' }; mavenCentral(); gradlePluginPortal() }
+    dependencies { classpath 'net.fabricmc:fabric-loom:1.17.21' }
+}
+plugins { id 'dev.kikugie.stonecutter' }
+def mc = stonecutter.current.version
+def legacy = mc == '1.21.11'
+apply plugin: legacy ? 'net.fabricmc.fabric-loom-remap' : 'net.fabricmc.fabric-loom'
+group = 'dev.keybindprofile'
+version = "1.0.5+${mc}"
+base { archivesName = 'keybindProfile' }
+repositories { mavenCentral() }
+def api = ['1.21.11':'0.141.6+1.21.11','26.1':'0.145.1+26.1','26.2':'0.161.0+26.2','26.3':'0.165.0+26.3'][mc]
+dependencies {
+    minecraft "com.mojang:minecraft:${mc}"
+    if (legacy) mappings loom.officialMojangMappings()
+    add(legacy ? 'modImplementation' : 'implementation', 'net.fabricmc:fabric-loader:0.20.1')
+    add(legacy ? 'modImplementation' : 'implementation', "net.fabricmc.fabric-api:fabric-api:${api}")
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+java { sourceCompatibility = legacy ? JavaVersion.VERSION_21 : JavaVersion.VERSION_25; targetCompatibility = sourceCompatibility; withSourcesJar() }
+tasks.withType(JavaCompile).configureEach { options.release = legacy ? 21 : 25 }
+test { useJUnitPlatform() }
+processResources {
+    inputs.properties version: version, mc: mc, java: legacy ? '21' : '25', api: api
+    filesMatching('fabric.mod.json') { expand version: version, mc: mc, java: legacy ? '21' : '25', api: api }
+}

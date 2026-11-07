@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "dev.keybindprofile.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ProfileHeaderMixin",
+    "KeyBindsRefreshMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

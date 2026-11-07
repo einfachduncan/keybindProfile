@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "keybindprofile",
+  "version": "${version}",
+  "name": "keybindProfile",
+  "description": "Shared keybinding profiles with previews, safe history and selective application.",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.keybindprofile.Client"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "~${mc}",
+    "java": ">=${java}",
+    "fabric-api": ">=${api}"
+  },
+  "mixins": [
+    "keybindprofile.mixins.json"
+  ],
+  "icon": "assets/keybindprofile/icon.png"
+}
